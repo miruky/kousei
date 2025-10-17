@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true">
+  <style>
+    .ink { stroke: #28241e; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #ebe6dc; }
+    }
+  </style>
+  <g class="ink" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="7" width="46" height="50" rx="7"/>
+    <path d="M19 21h26"/>
+    <path d="M19 32h14"/>
+    <path d="M19 43h26"/>
+  </g>
+  <g fill="none" stroke="#d05a35" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="36" cy="32" rx="13" ry="8"/>
+    <path d="M47 38l8 9"/>
+  </g>
+</svg>
