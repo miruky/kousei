@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 430" role="img" aria-label="kouseiのアーキテクチャ図">
+  <title>kouseiのアーキテクチャ: 入力テキストが4種の検査規則を通り、指摘リストと修正適用に流れる</title>
+  <style>
+    .box { fill: #fffdf9; stroke: #ddd6c8; rx: 10; }
+    .zone { fill: #f1ede4; stroke: #e3ddd0; rx: 14; }
+    .t { font-family: 'Hiragino Sans','Noto Sans JP',system-ui,sans-serif; fill: #28241e; }
+    .h { font-size: 13px; font-weight: 600; }
+    .s { font-size: 11px; fill: #6f6a5f; }
+    .zl { font-size: 11px; font-weight: 600; fill: #b8431f; letter-spacing: 1px; }
+    .arrow { stroke: #6f6a5f; stroke-width: 1.6; fill: none; marker-end: url(#head); }
+    @media (prefers-color-scheme: dark) {
+      .box { fill: #211e18; stroke: #38332a; }
+      .zone { fill: #1c1914; stroke: #2c2820; }
+      .t { fill: #ebe6dc; }
+      .s { fill: #a59c8d; }
+      .zl { fill: #e06a42; }
+      .arrow { stroke: #a59c8d; }
+    }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0 0 L7 4 L0 8 Z" fill="#6f6a5f"/>
+    </marker>
+  </defs>
+
+  <rect class="zone" x="20" y="20" width="740" height="92"/>
+  <text class="t zl" x="36" y="44">入力(main.ts)</text>
+  <rect class="box" x="36" y="52" width="708" height="44"/>
+  <text class="t h" x="52" y="72">本文テキスト(textarea)</text>
+  <text class="t s" x="52" y="88">入力のたびにlocalStorageへ保存し、200ミリ秒の待ち合わせ後に全文を再検査する</text>
+
+  <path class="arrow" d="M390 112 V140"/>
+
+  <rect class="zone" x="20" y="144" width="740" height="168"/>
+  <text class="t zl" x="36" y="168">検査エンジン(src/lib)</text>
+
+  <rect class="box" x="36" y="180" width="168" height="60"/>
+  <text class="t h" x="48" y="200">variants.ts</text>
+  <text class="t s" x="48" y="216">表記ゆれ。文書全体を集計し</text>
+  <text class="t s" x="48" y="231">少数派の表記だけ指摘する</text>
+
+  <rect class="box" x="216" y="180" width="168" height="60"/>
+  <text class="t h" x="228" y="200">redundancy.ts</text>
+  <text class="t s" x="228" y="216">冗長表現。重言の検出と</text>
+  <text class="t s" x="228" y="231">活用を合わせた置換案</text>
+
+  <rect class="box" x="396" y="180" width="168" height="60"/>
+  <text class="t h" x="408" y="200">misuse.ts</text>
+  <text class="t s" x="408" y="216">誤用。ら抜き・さ入れ・</text>
+  <text class="t s" x="408" y="231">慣用句の取り違え</text>
+
+  <rect class="box" x="576" y="180" width="168" height="60"/>
+  <text class="t h" x="588" y="200">style.ts</text>
+  <text class="t s" x="588" y="216">文体。敬体常体の混在・</text>
+  <text class="t s" x="588" y="231">長文・読点過多・文字種</text>
+
+  <path class="arrow" d="M120 240 V248"/>
+  <path class="arrow" d="M300 240 V248"/>
+  <path class="arrow" d="M480 240 V248"/>
+  <path class="arrow" d="M660 240 V248"/>
+
+  <rect class="box" x="36" y="252" width="708" height="48"/>
+  <text class="t h" x="52" y="272">engine.ts - lint() / analyze()</text>
+  <text class="t s" x="52" y="288">全規則を束ね、開始位置順のIssue列(位置・根拠・修正案)と文字数・文数・件数の統計に整える</text>
+
+  <path class="arrow" d="M390 312 V340"/>
+
+  <rect class="zone" x="20" y="344" width="740" height="72"/>
+  <rect class="box" x="36" y="356" width="340" height="48"/>
+  <text class="t h" x="52" y="376">fixes.ts(修正適用)</text>
+  <text class="t s" x="52" y="392">重なり合う指摘を除外し、後ろから一括置換する</text>
+  <rect class="box" x="400" y="356" width="344" height="48"/>
+  <text class="t h" x="416" y="376">UI(指摘リスト)</text>
+  <text class="t s" x="416" y="392">ハイライト・カテゴリ絞り込み・該当箇所への移動</text>
+
+  <path class="arrow" d="M36 380 H12 V74 H32"/>
+  <text class="t s" transform="rotate(-90 26 230)" x="26" y="230" text-anchor="middle">修正後の本文</text>
+</svg>
