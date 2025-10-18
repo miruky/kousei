@@ -1,0 +1,526 @@
+:root {
+  --bg: #f7f4ee;
+  --surface: #fffdf9;
+  --surface-2: #f1ede4;
+  --ink: #28241e;
+  --muted: #6f6a5f;
+  --line: #e3ddd0;
+  --accent: #b8431f;
+  --accent-soft: rgba(184, 67, 31, 0.1);
+  --cat-variant: #1f6fb2;
+  --cat-redundancy: #9a6700;
+  --cat-misuse: #b8431f;
+  --cat-style: #6b5bb2;
+  --sev-error: #b8431f;
+  --sev-warning: #9a6700;
+  --sev-info: #1f6fb2;
+  --shadow: 0 1px 2px rgba(40, 36, 30, 0.05), 0 8px 24px rgba(40, 36, 30, 0.06);
+  --radius: 12px;
+  --font-serif: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #181511;
+    --surface: #211e18;
+    --surface-2: #2a261f;
+    --ink: #ebe6dc;
+    --muted: #a59c8d;
+    --line: #38332a;
+    --accent: #e06a42;
+    --accent-soft: rgba(224, 106, 66, 0.14);
+    --cat-variant: #5b9fd8;
+    --cat-redundancy: #cfa436;
+    --cat-misuse: #e06a42;
+    --cat-style: #9d8ce0;
+    --sev-error: #e06a42;
+    --sev-warning: #cfa436;
+    --sev-info: #5b9fd8;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  font-family: 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  min-height: 100dvh;
+}
+
+#app {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  gap: 24px;
+}
+
+/* ヘッダー */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  animation: rise 0.5s ease both;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.brand h1 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.tagline {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.repo-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 16px;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.repo-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* レイアウト */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+  gap: 24px;
+  flex: 1;
+  align-items: start;
+  animation: rise 0.5s ease 0.08s both;
+}
+
+.pane {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* エディタ側 */
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+button {
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+button.primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+:is(button, .chip, .issue-body, .fix-btn, textarea, .repo-link):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ハイライト付きエディタ。backdropとtextareaの字面を完全に一致させる */
+
+.editor {
+  position: relative;
+  flex: 1;
+  min-height: min(58vh, 560px);
+}
+
+.editor .backdrop,
+.editor textarea {
+  position: absolute;
+  inset: 0;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.9;
+  letter-spacing: normal;
+  padding: 16px 20px;
+  border: none;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.editor .backdrop {
+  pointer-events: none;
+  color: transparent;
+  overflow: hidden;
+}
+
+.editor textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  background: transparent;
+  color: var(--ink);
+  caret-color: var(--accent);
+}
+
+.editor textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+mark.hl {
+  color: transparent;
+  background: color-mix(in srgb, var(--cat) 16%, transparent);
+  border-bottom: 2px solid var(--cat);
+  border-radius: 3px 3px 0 0;
+}
+
+mark.hl-variant {
+  --cat: var(--cat-variant);
+}
+
+mark.hl-redundancy {
+  --cat: var(--cat-redundancy);
+}
+
+mark.hl-misuse {
+  --cat: var(--cat-misuse);
+}
+
+mark.hl-style {
+  --cat: var(--cat-style);
+}
+
+mark.flash {
+  animation: flash 0.9s ease;
+}
+
+@keyframes flash {
+  0% {
+    background: color-mix(in srgb, var(--cat) 55%, transparent);
+  }
+
+  100% {
+    background: color-mix(in srgb, var(--cat) 16%, transparent);
+  }
+}
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sev-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-error {
+  background: var(--sev-error);
+}
+
+.dot-warning {
+  background: var(--sev-warning);
+}
+
+.dot-info {
+  background: var(--sev-info);
+}
+
+/* 指摘リスト側 */
+
+.issues-pane {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 220px);
+  min-height: 320px;
+  position: sticky;
+  top: 24px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-size: 12px;
+  border-radius: 999px;
+  padding: 4px 12px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.chip:hover {
+  color: var(--ink);
+}
+
+.chip.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.issues {
+  list-style: none;
+  overflow-y: auto;
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.issue {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--cat, var(--line));
+  border-radius: 8px;
+  background: var(--surface);
+  animation: rise 0.3s ease both;
+  animation-delay: var(--d, 0ms);
+}
+
+.issue-variant {
+  --cat: var(--cat-variant);
+}
+
+.issue-redundancy {
+  --cat: var(--cat-redundancy);
+}
+
+.issue-misuse {
+  --cat: var(--cat-misuse);
+}
+
+.issue-style {
+  --cat: var(--cat-style);
+}
+
+.issue-body {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 10px 12px 8px;
+}
+
+.issue-body:hover {
+  background: var(--surface-2);
+  transform: none;
+}
+
+.issue-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cat);
+  border: 1px solid color-mix(in srgb, var(--cat) 45%, transparent);
+  border-radius: 4px;
+  padding: 0 6px;
+  flex-shrink: 0;
+}
+
+.sev {
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.excerpt {
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.message {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.fix-btn {
+  display: block;
+  margin: 0 12px 10px;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+}
+
+.fix-btn:hover {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* 空状態 */
+
+.empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.empty-mark {
+  width: 56px;
+  height: 56px;
+  opacity: 0.45;
+}
+
+/* フッター */
+
+.site-footer {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+  padding: 8px 0;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .issues-pane {
+    position: static;
+    max-height: none;
+  }
+
+  .editor {
+    min-height: 46vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
