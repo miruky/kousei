@@ -5,9 +5,25 @@ import {
   applyFix,
   categoryLabels,
   fixableIssues,
+  modeLabel,
   severityLabels,
+  ThemeController,
 } from './lib';
-import type { Category, Issue, Stats } from './lib';
+import type { Category, Issue, Stats, ThemeMode } from './lib';
+
+const themeIcon = (body: string): string =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ` +
+  `stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+
+const THEME_ICON: Record<ThemeMode, string> = {
+  auto: themeIcon(
+    '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/>',
+  ),
+  light: themeIcon(
+    '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/>',
+  ),
+  dark: themeIcon('<path d="M20.5 14.6A8 8 0 0 1 9.4 3.5 7 7 0 1 0 20.5 14.6z"/>'),
+};
 
 const STORE_KEY = 'kousei:text';
 
@@ -57,11 +73,15 @@ app.innerHTML = `
     <div class="brand">
       ${LOGO_SVG}
       <div>
+        <span class="kicker">日本語校正</span>
         <h1>kousei</h1>
         <p class="tagline">表記ゆれ・冗長表現・誤用・文体の乱れを、ブラウザの中だけで検出する</p>
       </div>
     </div>
-    <a class="repo-link" href="https://github.com/miruky/kousei" rel="noopener">GitHub</a>
+    <div class="header-actions">
+      <button type="button" id="btn-theme" class="icon-btn" aria-label="配色テーマ"></button>
+      <a class="repo-link" href="https://github.com/miruky/kousei" rel="noopener">GitHub</a>
+    </div>
   </header>
   <main class="layout">
     <section class="pane editor-pane" aria-label="本文の編集">
@@ -106,6 +126,15 @@ const btnSample = mustFind<HTMLButtonElement>('#btn-sample');
 const btnClear = mustFind<HTMLButtonElement>('#btn-clear');
 const btnFixAll = mustFind<HTMLButtonElement>('#btn-fix-all');
 const btnCopy = mustFind<HTMLButtonElement>('#btn-copy');
+const btnTheme = mustFind<HTMLButtonElement>('#btn-theme');
+
+const theme = new ThemeController();
+function syncThemeButton(mode: ThemeMode): void {
+  btnTheme.innerHTML = THEME_ICON[mode];
+  btnTheme.setAttribute('aria-label', `配色テーマ: ${modeLabel(mode)}(クリックで切り替え)`);
+}
+syncThemeButton(theme.mode);
+btnTheme.addEventListener('click', () => syncThemeButton(theme.cycle()));
 
 let issues: Issue[] = [];
 let filter: Category | 'all' = 'all';
