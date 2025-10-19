@@ -1,43 +1,49 @@
 :root {
-  --bg: #f7f4ee;
-  --surface: #fffdf9;
-  --surface-2: #f1ede4;
-  --ink: #28241e;
-  --muted: #6f6a5f;
-  --line: #e3ddd0;
-  --accent: #b8431f;
-  --accent-soft: rgba(184, 67, 31, 0.1);
+  --bg: #f5f1e9;
+  --surface: #fdfbf6;
+  --surface-2: #efe9dd;
+  --ink: #27231d;
+  --muted: #6d685c;
+  --line: #e3dccd;
+  --line-strong: #d4ccb9;
+  --accent: #b03f1f;
+  --accent-text: #9b3819;
+  --accent-soft: rgba(176, 63, 31, 0.1);
   --cat-variant: #1f6fb2;
-  --cat-redundancy: #9a6700;
-  --cat-misuse: #b8431f;
-  --cat-style: #6b5bb2;
-  --sev-error: #b8431f;
-  --sev-warning: #9a6700;
+  --cat-redundancy: #936000;
+  --cat-misuse: #b03f1f;
+  --cat-style: #645aa8;
+  --sev-error: #b03f1f;
+  --sev-warning: #936000;
   --sev-info: #1f6fb2;
   --shadow: 0 1px 2px rgba(40, 36, 30, 0.05), 0 8px 24px rgba(40, 36, 30, 0.06);
   --radius: 12px;
+  --radius-sm: 9px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --font-sans: 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
   --font-serif: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #181511;
-    --surface: #211e18;
-    --surface-2: #2a261f;
-    --ink: #ebe6dc;
-    --muted: #a59c8d;
-    --line: #38332a;
-    --accent: #e06a42;
-    --accent-soft: rgba(224, 106, 66, 0.14);
-    --cat-variant: #5b9fd8;
-    --cat-redundancy: #cfa436;
-    --cat-misuse: #e06a42;
-    --cat-style: #9d8ce0;
-    --sev-error: #e06a42;
-    --sev-warning: #cfa436;
-    --sev-info: #5b9fd8;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
-  }
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #16130e;
+  --surface: #1e1b15;
+  --surface-2: #28241d;
+  --ink: #ebe6dc;
+  --muted: #a59c8d;
+  --line: #332e26;
+  --line-strong: #423c31;
+  --accent: #e06a42;
+  --accent-text: #ea8059;
+  --accent-soft: rgba(224, 106, 66, 0.14);
+  --cat-variant: #5b9fd8;
+  --cat-redundancy: #cfa436;
+  --cat-misuse: #e06a42;
+  --cat-style: #9d8ce0;
+  --sev-error: #e06a42;
+  --sev-warning: #cfa436;
+  --sev-info: #5b9fd8;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 * {
@@ -51,11 +57,13 @@ html {
 }
 
 body {
-  font-family: 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg);
   color: var(--ink);
   line-height: 1.7;
   min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 #app {
@@ -91,18 +99,61 @@ body {
   flex-shrink: 0;
 }
 
+.kicker {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
 .brand h1 {
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  line-height: 1.2;
+  letter-spacing: 0.03em;
+  line-height: 1.05;
 }
 
 .tagline {
   color: var(--muted);
   font-size: 13px;
-  margin-top: 4px;
+  margin-top: 5px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--muted);
+  transition:
+    color 0.16s var(--ease),
+    border-color 0.16s var(--ease),
+    transform 0.12s var(--ease);
+}
+
+.icon-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.icon-btn:hover {
+  color: var(--accent-text);
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .repo-link {
@@ -113,13 +164,13 @@ body {
   border-radius: 999px;
   padding: 6px 16px;
   transition:
-    color 0.15s ease,
-    border-color 0.15s ease,
-    transform 0.15s ease;
+    color 0.15s var(--ease),
+    border-color 0.15s var(--ease),
+    transform 0.15s var(--ease);
 }
 
 .repo-link:hover {
-  color: var(--accent);
+  color: var(--accent-text);
   border-color: var(--accent);
   transform: translateY(-1px);
 }
@@ -139,7 +190,6 @@ body {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
 }
 
 /* エディタ側 */
@@ -354,7 +404,7 @@ mark.flash {
 .chip.active {
   background: var(--accent-soft);
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .issues {
@@ -448,7 +498,7 @@ mark.flash {
   display: block;
   margin: 0 12px 10px;
   font-size: 12px;
-  color: var(--accent);
+  color: var(--accent-text);
   background: var(--accent-soft);
   border: none;
   border-radius: 6px;

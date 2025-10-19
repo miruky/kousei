@@ -8,8 +8,25 @@
       content="表記ゆれ・冗長表現・誤用・文体の乱れをブラウザ内で検出する日本語文章校正ツール"
     />
     <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f5f1e9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#16130e" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>kousei | 日本語文章校正</title>
+    <script>
+      // 描画前に保存テーマを解決して data-theme を載せ、初回のちらつきを防ぐ。
+      (function () {
+        try {
+          var raw = localStorage.getItem('kousei.theme.v1');
+          var mode = raw === 'light' || raw === 'dark' || raw === 'auto' ? raw : 'auto';
+          var dark =
+            mode === 'dark' ||
+            (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        } catch (e) {
+          /* localStorage 不可の環境は既定(ライト)で描く */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
