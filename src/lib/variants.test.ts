@@ -15,6 +15,22 @@ describe('表記ゆれの検出', () => {
     expect(detectVariants('サーバの設定をサーバ管理者が変更する。')).toHaveLength(0);
   });
 
+  it('技術用語の長音ゆれ(パラメータ/パラメーター)を検出する', () => {
+    const text = 'パラメーターを渡す。次にパラメータを検証し、パラメーターを保存する。';
+    const issues = detectVariants(text);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]?.text).toBe('パラメータ');
+    expect(issues[0]?.suggestion).toBe('パラメーター');
+  });
+
+  it('「ため」と「為」の混在を指摘し、熟語(行為・為替)は数えない', () => {
+    const text = '確認のため再起動した。その為に行為や為替の話は省く。さらに保守のためだ。';
+    const issues = detectVariants(text);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]?.text).toBe('為');
+    expect(issues[0]?.suggestion).toBe('ため');
+  });
+
   it('「ユーザビリティ」の中の「ユーザ」は数えない', () => {
     const text = 'ユーザビリティの調査でユーザーの声を集めた。';
     expect(detectVariants(text)).toHaveLength(0);
