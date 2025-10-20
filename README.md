@@ -88,6 +88,7 @@ const { stats } = analyze('短い報告です。問題はありません。');
 - `src/lib/rules/style.ts` 文体混在・長文・読点過多・文末単調・文字種の検査
 - `src/lib/engine.ts` 規則の束ねとIssue列・統計への整形
 - `src/lib/fixes.ts` 重なりを除外した修正適用
+- `src/lib/theme.ts` 配色テーマ(自動/ライト/ダーク)の解決と保存
 - `src/main.ts` ハイライト付きエディタと指摘リストのUI
 - `docs/` アーキテクチャ図
 
@@ -117,6 +118,8 @@ npm run build
 ### デプロイ
 
 mainへのpushで `deploy.yml` がGitHub Pagesへ公開する。サブパス配信のためのbaseは環境変数 `KOUSEI_BASE` で渡す。
+
+配色はヘッダ右のテーマボタンで「自動(OS設定に追従)・ライト・ダーク」を順に切り替えられ、選択は次回も保たれる。描画前にテーマを解決するため再読み込みでもちらつかない。
 
 ## 制約
 
