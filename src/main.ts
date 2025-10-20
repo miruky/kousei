@@ -5,6 +5,7 @@ import {
   applyFix,
   categoryLabels,
   fixableIssues,
+  formatReport,
   modeLabel,
   severityLabels,
   ThemeController,
@@ -91,6 +92,7 @@ app.innerHTML = `
         <span class="toolbar-spacer"></span>
         <button type="button" id="btn-fix-all" class="primary"></button>
         <button type="button" id="btn-copy">コピー</button>
+        <button type="button" id="btn-report">レポート</button>
       </div>
       <div class="editor">
         <div class="backdrop" aria-hidden="true"><div class="hl-content"></div></div>
@@ -126,6 +128,7 @@ const btnSample = mustFind<HTMLButtonElement>('#btn-sample');
 const btnClear = mustFind<HTMLButtonElement>('#btn-clear');
 const btnFixAll = mustFind<HTMLButtonElement>('#btn-fix-all');
 const btnCopy = mustFind<HTMLButtonElement>('#btn-copy');
+const btnReport = mustFind<HTMLButtonElement>('#btn-report');
 const btnTheme = mustFind<HTMLButtonElement>('#btn-theme');
 
 const theme = new ThemeController();
@@ -137,6 +140,7 @@ syncThemeButton(theme.mode);
 btnTheme.addEventListener('click', () => syncThemeButton(theme.cycle()));
 
 let issues: Issue[] = [];
+let lastStats: Stats | null = null;
 let filter: Category | 'all' = 'all';
 let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -275,6 +279,7 @@ function renderStatus(stats: Stats): void {
 function render(): void {
   const { issues: all, stats } = analyze(textarea.value);
   issues = all;
+  lastStats = stats;
   const visible = visibleIssues();
   renderHighlights(textarea.value, visible);
   renderFilters();
@@ -333,6 +338,17 @@ btnCopy.addEventListener('click', () => {
       btnCopy.textContent = 'コピー';
     }, 1500);
   });
+});
+
+btnReport.addEventListener('click', () => {
+  if (!lastStats) return;
+  const report = formatReport(issues, lastStats);
+  const url = URL.createObjectURL(new Blob([report], { type: 'text/markdown;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'kousei-report.md';
+  a.click();
+  URL.revokeObjectURL(url);
 });
 
 let stored: string | null = null;
