@@ -70,6 +70,15 @@ export const variantGroups: VariantGroup[] = [
   { id: 'yoroshiku', classes: [['よろしくお願い'], ['宜しくお願い']] },
   // 「まこと」「ひとこと」を巻き込まないよう、直前の文字で別語を除外する
   { id: 'koto', boundary: true, notAfter: ['ま', 'と', 'み'], classes: [['こと'], ['事']] },
+  // 技術文書で頻出する長音の有無
+  { id: 'vendor', classes: [['ベンダー'], ['ベンダ']] },
+  { id: 'parameter', classes: [['パラメーター'], ['パラメータ']] },
+  { id: 'header', classes: [['ヘッダー'], ['ヘッダ']] },
+  { id: 'master', classes: [['マスター'], ['マスタ']] },
+  { id: 'member', classes: [['メンバー'], ['メンバ']] },
+  // 「行為」「為替」などの熟語は boundary が前後の漢字で弾く
+  { id: 'tame', boundary: true, classes: [['ため'], ['為']] },
+  { id: 'totomoni', boundary: true, classes: [['とともに'], ['と共に']] },
 ];
 
 const KANJI = '一-龠々';
